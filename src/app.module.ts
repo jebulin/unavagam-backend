@@ -17,15 +17,16 @@ import { OrderModule } from './order/order.module';
 @Module({
   imports: [TypeOrmModule.forRoot({
     type: "mysql",
-    host: "txlvz.h.filess.io",
-    username: "una_reportthis",
-    password: "ce279eebae4d3861d65a95539cf042a34fb49bee",
-    database: "una_reportthis",
-    // host: "localhost",
+    host: process.env.DB_HOST,
+    username: process.env.DB_USERNAME,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_DATABASENAME,
     port: 3307,
+    // host: "localhost",
     // username: "root",
     // password: "root",
     // database: "unavagam",
+    // port: 3306,
     entities: ['././entities/.ts'],
     autoLoadEntities: true,
     synchronize: false
