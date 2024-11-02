@@ -1,4 +1,4 @@
 export const jwtConstants = {
-    secret: "unavagam",
+    secret: process.env.SECRET,
   };
 export const MAILER_CLIENT = "MAILER_CLIENT";
