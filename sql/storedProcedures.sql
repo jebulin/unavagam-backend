@@ -1,9 +1,53 @@
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_unavagam_getAllClients`()
+DELIMITER $$
+CREATE PROCEDURE `sp_unavagam_getAllCategories`()
+BEGIN
+WITH RECURSIVE hierarchy AS (
+    SELECT 
+        id AS child_id,
+        name AS child_name,
+        parent_id
+    FROM 
+        categories
+)
+
+SELECT 
+    parent.id AS parent_id,
+    parent.name AS parent_name,
+    CASE 
+        WHEN COUNT(child.child_id) = 0 THEN NULL  -- If no children, set to NULL
+        ELSE JSON_ARRAYAGG(
+            JSON_OBJECT('id', child.child_id, 'name', child.child_name)
+        )
+    END AS children,
+    (select name from food_type_ref ftr where parent.type_id = ftr.id) as type
+FROM 
+    categories AS parent
+LEFT JOIN 
+    hierarchy AS child ON parent.id = child.parent_id AND child.child_name IS NOT NULL
+GROUP BY 
+    parent.id, parent.name;
+
+
+END$$
+DELIMITER ;
+
+DELIMITER $$
+CREATE PROCEDURE `sp_unavagam_getAllClients`()
 BEGIN
 select C.*, count(S.client_id) as countOfShops from clients C left join shops S on S.client_id = C.id group by C.id;
-END
+END$$
+DELIMITER ;
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_unavagam_getAllShopsUser`(IN pShopId INT, IN pRoleId INT)
+DELIMITER $$
+CREATE PROCEDURE `sp_unavagam_getAllMenuProducts`(IN pMenuId INT)
+BEGIN
+SELECT MP.menu_id, P.id, P.name,P.price,P.description,P.stock FROM menu_products MP
+join products P on P.id = MP.product_id where MP.menu_id= pMenuId;
+END$$
+DELIMITER ;
+
+DELIMITER $$
+CREATE PROCEDURE `sp_unavagam_getAllShopsUser`(IN pShopId INT, IN pRoleId INT)
 BEGIN
 
 SET @sqlQuery = CONCAT("SELECT U.id, U.first_name, U.last_name, U.email, U.phone_number as phoneNumber,
@@ -32,4 +76,5 @@ END IF;
  PREPARE stmt FROM @sqlQuery;
     EXECUTE stmt;
     DEALLOCATE PREPARE  stmt;
-END
+END$$
+DELIMITER ;

@@ -1,35 +1,23 @@
-import { Status } from "src/shared/enums/status";
 import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 import { OrderStatus } from "../enum/order-status.enum";
+import { OrderProductStatus } from "../enum/order-product-status.enum";
 
-@Entity("orders")
-export class Order {
+@Entity("order_products")
+export class OrderProduct {
     @PrimaryGeneratedColumn()
     id: number;
 
     @Column({ name: "order_id" })
-    orderId: string;
+    orderId: number;
 
-    @Column({ name: "shop_id" })
-    shopId: number;
-
-    @Column()
-    type: number;
+    @Column({ name: "product_id" })
+    productId: number;
 
     @Column()
-    total: number;
+    price: number;
 
-    @Column({name: "total_quantity"})
-    totalQuantity: number;
-
-    @Column({name:"customer_id"})
-    customerId: number;
-
-    @Column({name: "payment_method"})
-    paymentMethod: string;
-
-    @Column({name: "payment_status"})
-    paymentStatus: number;
+    @Column()
+    quantity: number;
 
     @Column({ name: "created_at", type: "timestamp" })
     createdAt: string;
@@ -44,5 +32,5 @@ export class Order {
     updatedBy: number;
 
     @Column({ type: 'tinyint' })
-    status: OrderStatus;
+    status: OrderProductStatus;
 }

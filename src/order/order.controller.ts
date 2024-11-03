@@ -28,7 +28,7 @@ export class OrderController {
 
   @Roles(UserRole.SUPER_ADMIN, UserRole.OWNER, UserRole.MANAGER, UserRole.PILOT, UserRole.CUSTOMER)
   @UseGuards(RolesGuard)
-  @ApiOperation({ summary: "find all orders" })
+  @ApiOperation({ summary: "create order" })
   @Post()
   async create(@Body() createOrderDto: CreateOrderDto, @User() loggedUser) {
     return await this.orderService.create(createOrderDto, loggedUser);
